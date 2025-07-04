@@ -12,6 +12,7 @@ import KpiCards from '@/components/KpiCards';
 import FailureReasonsChart from '@/components/FailureReasonsChart';
 import PerformanceOverTimeChart from '@/components/PerformanceOverTimeChart';
 import EngagementFunnelChart from '@/components/EngagementFunnelChart';
+import CampaignTable from '@/components/CampaignTable';
 import { generateSampleData } from '@/lib/sampleData';
 
 const Index = () => {
@@ -122,19 +123,20 @@ const Index = () => {
         {/* KPI Cards */}
         <KpiCards data={filteredData} />
 
-        {/* Charts Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          {/* Left Column */}
-          <div className="space-y-6">
-            <FailureReasonsChart data={filteredData} />
-            <EngagementFunnelChart data={filteredData} />
-          </div>
+        {/* Performance Over Time - Full Width */}
+        <PerformanceOverTimeChart data={filteredData} />
 
-          {/* Right Column */}
-          <div className="space-y-6">
-            <PerformanceOverTimeChart data={filteredData} />
-          </div>
+        {/* Two Column Grid */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          {/* Left Column - Engagement Funnel */}
+          <EngagementFunnelChart data={filteredData} />
+
+          {/* Right Column - Failure Reasons */}
+          <FailureReasonsChart data={filteredData} />
         </div>
+
+        {/* Campaign Table - Full Width */}
+        <CampaignTable data={filteredData} />
       </div>
     </div>
   );
