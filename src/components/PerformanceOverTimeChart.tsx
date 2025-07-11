@@ -19,7 +19,8 @@ const PerformanceOverTimeChart = ({ data }: PerformanceOverTimeChartProps) => {
         totalAttempted: 0,
         totalDelivered: 0,
         totalRead: 0,
-        totalResponded: 0
+        totalResponded: 0,
+        totalFailed: 0
       };
     }
     
@@ -27,6 +28,7 @@ const PerformanceOverTimeChart = ({ data }: PerformanceOverTimeChartProps) => {
     acc[date].totalDelivered += item.delivered;
     acc[date].totalRead += item.read;
     acc[date].totalResponded += item.responded;
+    acc[date].totalFailed += (item.attempted - item.delivered);
     
     return acc;
   }, {} as Record<string, any>);
@@ -35,7 +37,8 @@ const PerformanceOverTimeChart = ({ data }: PerformanceOverTimeChartProps) => {
     date: format(parseISO(day.date), 'MMM dd'),
     deliveryRate: ((day.totalDelivered / day.totalAttempted) * 100).toFixed(1),
     readRate: ((day.totalRead / day.totalDelivered) * 100).toFixed(1),
-    responseRate: ((day.totalResponded / day.totalDelivered) * 100).toFixed(1)
+    responseRate: ((day.totalResponded / day.totalDelivered) * 100).toFixed(1),
+    failureRate: ((day.totalFailed / day.totalAttempted) * 100).toFixed(1)
   }));
 
   const CustomTooltip = ({ active, payload, label }: any) => {
@@ -104,6 +107,15 @@ const PerformanceOverTimeChart = ({ data }: PerformanceOverTimeChartProps) => {
                 name="Response Rate"
                 dot={{ fill: '#8b5cf6', strokeWidth: 2, r: 4 }}
                 activeDot={{ r: 6, stroke: '#8b5cf6', strokeWidth: 2 }}
+              />
+              <Line 
+                type="monotone" 
+                dataKey="failureRate" 
+                stroke="#ef4444" 
+                strokeWidth={3}
+                name="Failure Rate"
+                dot={{ fill: '#ef4444', strokeWidth: 2, r: 4 }}
+                activeDot={{ r: 6, stroke: '#ef4444', strokeWidth: 2 }}
               />
             </LineChart>
           </ResponsiveContainer>

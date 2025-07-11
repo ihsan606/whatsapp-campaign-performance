@@ -70,6 +70,11 @@ const EngagementFunnelChart = ({ data }: EngagementFunnelChartProps) => {
                   <div className="font-bold text-gray-900">
                     {stage.count.toLocaleString()}
                   </div>
+                  {index > 0 && (
+                    <div className="text-sm text-gray-500">
+                      {((stage.count / stages[index - 1].count) * 100).toFixed(1)}% conversion
+                    </div>
+                  )}
                 </div>
               </div>
               

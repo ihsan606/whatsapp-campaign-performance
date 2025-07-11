@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 import { CampaignData } from '@/lib/sampleData';
@@ -34,8 +33,8 @@ const KpiCards = ({ data }: KpiCardsProps) => {
     },
     {
       title: 'Delivery Rate',
-      value: totalDelivered.toLocaleString(),
-      rate: `${deliveryRate.toFixed(1)}%`,
+      value: `${deliveryRate.toFixed(1)}%`,
+      rate: totalDelivered.toLocaleString(),
       change: '+2.1%',
       isPositive: true,
       color: 'from-emerald-500 to-emerald-600',
@@ -43,8 +42,8 @@ const KpiCards = ({ data }: KpiCardsProps) => {
     },
     {
       title: 'Read Rate',
-      value: totalRead.toLocaleString(),
-      rate: `${readRate.toFixed(1)}%`,
+      value: `${readRate.toFixed(1)}%`,
+      rate: totalRead.toLocaleString(),
       change: '+3.5%',
       isPositive: true,
       color: 'from-blue-500 to-blue-600',
@@ -52,8 +51,8 @@ const KpiCards = ({ data }: KpiCardsProps) => {
     },
     {
       title: 'Response Rate',
-      value: totalResponded.toLocaleString(),
-      rate: `${responseRate.toFixed(1)}%`,
+      value: `${responseRate.toFixed(1)}%`,
+      rate: totalResponded.toLocaleString(),
       change: '+1.8%',
       isPositive: true,
       color: 'from-purple-500 to-purple-600',
@@ -61,8 +60,8 @@ const KpiCards = ({ data }: KpiCardsProps) => {
     },
     {
       title: 'Failure Rate',
-      value: totalFailed.toLocaleString(),
-      rate: `${failureRate.toFixed(1)}%`,
+      value: `${failureRate.toFixed(1)}%`,
+      rate: totalFailed.toLocaleString(),
       change: '-1.2%',
       isPositive: true,
       color: 'from-red-500 to-red-600',

@@ -92,60 +92,48 @@ const CampaignTable = ({ data }: CampaignTableProps) => {
                     {campaign.totalRecipients.toLocaleString()}
                   </TableCell>
                   <TableCell className="text-right">
-                    <div className="space-y-1">
-                      <div className="font-medium">{campaign.delivered.toLocaleString()}</div>
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
-                        parseFloat(campaign.deliveryRate) >= 90 
-                          ? 'bg-emerald-100 text-emerald-800' 
-                          : parseFloat(campaign.deliveryRate) >= 70 
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-red-100 text-red-800'
-                      }`}>
-                        {campaign.deliveryRate}%
-                      </span>
-                    </div>
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
+                      parseFloat(campaign.deliveryRate) >= 90 
+                        ? 'bg-emerald-100 text-emerald-800' 
+                        : parseFloat(campaign.deliveryRate) >= 70 
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-red-100 text-red-800'
+                    }`}>
+                      {campaign.deliveryRate}%
+                    </span>
                   </TableCell>
                   <TableCell className="text-right">
-                    <div className="space-y-1">
-                      <div className="font-medium">{campaign.read.toLocaleString()}</div>
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
-                        parseFloat(campaign.readRate) >= 60 
-                          ? 'bg-emerald-100 text-emerald-800' 
-                          : parseFloat(campaign.readRate) >= 40 
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-red-100 text-red-800'
-                      }`}>
-                        {campaign.readRate}%
-                      </span>
-                    </div>
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
+                      parseFloat(campaign.readRate) >= 60 
+                        ? 'bg-emerald-100 text-emerald-800' 
+                        : parseFloat(campaign.readRate) >= 40 
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-red-100 text-red-800'
+                    }`}>
+                      {campaign.readRate}%
+                    </span>
                   </TableCell>
                   <TableCell className="text-right">
-                    <div className="space-y-1">
-                      <div className="font-medium">{campaign.responded.toLocaleString()}</div>
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
-                        parseFloat(campaign.responseRate) >= 15 
-                          ? 'bg-emerald-100 text-emerald-800' 
-                          : parseFloat(campaign.responseRate) >= 5 
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-red-100 text-red-800'
-                      }`}>
-                        {campaign.responseRate}%
-                      </span>
-                    </div>
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
+                      parseFloat(campaign.responseRate) >= 15 
+                        ? 'bg-emerald-100 text-emerald-800' 
+                        : parseFloat(campaign.responseRate) >= 5 
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-red-100 text-red-800'
+                    }`}>
+                      {campaign.responseRate}%
+                    </span>
                   </TableCell>
                   <TableCell className="text-right">
-                    <div className="space-y-1">
-                      <div className="font-medium">{campaign.failed.toLocaleString()}</div>
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
-                        parseFloat(campaign.failureRate) <= 10 
-                          ? 'bg-emerald-100 text-emerald-800' 
-                          : parseFloat(campaign.failureRate) <= 30 
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-red-100 text-red-800'
-                      }`}>
-                        {campaign.failureRate}%
-                      </span>
-                    </div>
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
+                      parseFloat(campaign.failureRate) <= 10 
+                        ? 'bg-emerald-100 text-emerald-800' 
+                        : parseFloat(campaign.failureRate) <= 30 
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-red-100 text-red-800'
+                    }`}>
+                      {campaign.failureRate}%
+                    </span>
                   </TableCell>
                   <TableCell className="text-right font-medium">
                     {campaign.tokensUsed.toLocaleString()}
