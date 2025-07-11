@@ -28,6 +28,15 @@ const FailureReasonsChart = ({ data }: FailureReasonsChartProps) => {
     '#06b6d4', '#8b5cf6', '#ec4899', '#64748b'
   ];
 
+  const failureReasonExplanations = {
+    'Invalid number': 'Phone number format is incorrect or does not exist',
+    'Blocked by user': 'Recipient has blocked messages from this sender',
+    'Network error': 'Temporary connectivity issues preventing delivery',
+    'Service unavailable': 'WhatsApp service is temporarily down',
+    'Rate limit exceeded': 'Too many messages sent too quickly',
+    'Message too long': 'Message exceeds maximum character limit'
+  };
+
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0];
@@ -74,6 +83,27 @@ const FailureReasonsChart = ({ data }: FailureReasonsChartProps) => {
               <Tooltip content={<CustomTooltip />} />
             </PieChart>
           </ResponsiveContainer>
+        </div>
+        
+        {/* Legend with explanations */}
+        <div className="mt-4 space-y-2">
+          <h4 className="font-medium text-gray-700 text-sm">Failure Reason Explanations:</h4>
+          <div className="space-y-1">
+            {chartData.map((item, index) => (
+              <div key={item.name} className="flex items-start gap-2 text-xs">
+                <div 
+                  className="w-3 h-3 rounded-full mt-0.5 flex-shrink-0"
+                  style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                />
+                <div>
+                  <span className="font-medium">{item.name}:</span>
+                  <span className="text-gray-600 ml-1">
+                    {failureReasonExplanations[item.name as keyof typeof failureReasonExplanations]}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </CardContent>
     </Card>

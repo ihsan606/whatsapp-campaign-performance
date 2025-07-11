@@ -14,43 +14,50 @@ const CampaignTable = ({ data }: CampaignTableProps) => {
     if (!acc[item.campaignId]) {
       acc[item.campaignId] = {
         campaignId: item.campaignId,
-        dates: [],
+        publishDate: item.timestamp,
         totalAttempted: 0,
         totalDelivered: 0,
         totalRead: 0,
-        totalResponded: 0
+        totalResponded: 0,
+        totalFailed: 0,
+        totalTokensUsed: 0
       };
     }
     
-    acc[item.campaignId].dates.push(item.timestamp);
+    // Use earliest date as publish date
+    if (new Date(item.timestamp) < new Date(acc[item.campaignId].publishDate)) {
+      acc[item.campaignId].publishDate = item.timestamp;
+    }
+    
     acc[item.campaignId].totalAttempted += item.attempted;
     acc[item.campaignId].totalDelivered += item.delivered;
     acc[item.campaignId].totalRead += item.read;
     acc[item.campaignId].totalResponded += item.responded;
+    acc[item.campaignId].totalFailed += (item.attempted - item.delivered);
+    acc[item.campaignId].totalTokensUsed += item.tokensUsed;
     
     return acc;
   }, {} as Record<string, any>);
 
   const tableData = Object.values(campaignMetrics).map((campaign: any) => {
     const deliveryRate = (campaign.totalDelivered / campaign.totalAttempted) * 100;
-    const failureRate = ((campaign.totalAttempted - campaign.totalDelivered) / campaign.totalAttempted) * 100;
     const readRate = (campaign.totalRead / campaign.totalDelivered) * 100;
     const responseRate = (campaign.totalResponded / campaign.totalDelivered) * 100;
-    
-    // Get date range for campaign
-    const sortedDates = campaign.dates.sort();
-    const startDate = format(parseISO(sortedDates[0]), 'MMM dd, yyyy');
-    const endDate = format(parseISO(sortedDates[sortedDates.length - 1]), 'MMM dd, yyyy');
-    const dateRange = startDate === endDate ? startDate : `${startDate} - ${endDate}`;
+    const failureRate = (campaign.totalFailed / campaign.totalAttempted) * 100;
 
     return {
       campaignId: campaign.campaignId,
-      dateRange,
-      recipients: campaign.totalAttempted,
+      publishDate: format(parseISO(campaign.publishDate), 'MMM dd, yyyy'),
+      totalRecipients: campaign.totalAttempted,
+      delivered: campaign.totalDelivered,
       deliveryRate: deliveryRate.toFixed(1),
-      failureRate: failureRate.toFixed(1),
+      read: campaign.totalRead,
       readRate: readRate.toFixed(1),
-      responseRate: responseRate.toFixed(1)
+      responded: campaign.totalResponded,
+      responseRate: responseRate.toFixed(1),
+      failed: campaign.totalFailed,
+      failureRate: failureRate.toFixed(1),
+      tokensUsed: campaign.totalTokensUsed
     };
   });
 
@@ -67,41 +74,81 @@ const CampaignTable = ({ data }: CampaignTableProps) => {
             <TableHeader>
               <TableRow>
                 <TableHead className="font-semibold">Campaign Name</TableHead>
-                <TableHead className="font-semibold">Campaign Date</TableHead>
-                <TableHead className="font-semibold text-right">Recipients</TableHead>
+                <TableHead className="font-semibold">Publish Date</TableHead>
+                <TableHead className="font-semibold text-right">Total Recipients</TableHead>
                 <TableHead className="font-semibold text-right">Delivery Rate</TableHead>
-                <TableHead className="font-semibold text-right">Failure Rate</TableHead>
                 <TableHead className="font-semibold text-right">Read Rate</TableHead>
                 <TableHead className="font-semibold text-right">Response Rate</TableHead>
+                <TableHead className="font-semibold text-right">Failure Rate</TableHead>
+                <TableHead className="font-semibold text-right">Tokens Used</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {tableData.map((campaign) => (
                 <TableRow key={campaign.campaignId} className="hover:bg-gray-50/50">
                   <TableCell className="font-medium">{campaign.campaignId}</TableCell>
-                  <TableCell className="text-gray-600">{campaign.dateRange}</TableCell>
+                  <TableCell className="text-gray-600">{campaign.publishDate}</TableCell>
                   <TableCell className="text-right font-medium">
-                    {campaign.recipients.toLocaleString()}
+                    {campaign.totalRecipients.toLocaleString()}
                   </TableCell>
                   <TableCell className="text-right">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
-                      {campaign.deliveryRate}%
-                    </span>
+                    <div className="space-y-1">
+                      <div className="font-medium">{campaign.delivered.toLocaleString()}</div>
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
+                        parseFloat(campaign.deliveryRate) >= 90 
+                          ? 'bg-emerald-100 text-emerald-800' 
+                          : parseFloat(campaign.deliveryRate) >= 70 
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-red-100 text-red-800'
+                      }`}>
+                        {campaign.deliveryRate}%
+                      </span>
+                    </div>
                   </TableCell>
                   <TableCell className="text-right">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-red-100 text-red-800">
-                      {campaign.failureRate}%
-                    </span>
+                    <div className="space-y-1">
+                      <div className="font-medium">{campaign.read.toLocaleString()}</div>
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
+                        parseFloat(campaign.readRate) >= 60 
+                          ? 'bg-emerald-100 text-emerald-800' 
+                          : parseFloat(campaign.readRate) >= 40 
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-red-100 text-red-800'
+                      }`}>
+                        {campaign.readRate}%
+                      </span>
+                    </div>
                   </TableCell>
                   <TableCell className="text-right">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-emerald-100 text-emerald-800">
-                      {campaign.readRate}%
-                    </span>
+                    <div className="space-y-1">
+                      <div className="font-medium">{campaign.responded.toLocaleString()}</div>
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
+                        parseFloat(campaign.responseRate) >= 15 
+                          ? 'bg-emerald-100 text-emerald-800' 
+                          : parseFloat(campaign.responseRate) >= 5 
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-red-100 text-red-800'
+                      }`}>
+                        {campaign.responseRate}%
+                      </span>
+                    </div>
                   </TableCell>
                   <TableCell className="text-right">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-800">
-                      {campaign.responseRate}%
-                    </span>
+                    <div className="space-y-1">
+                      <div className="font-medium">{campaign.failed.toLocaleString()}</div>
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
+                        parseFloat(campaign.failureRate) <= 10 
+                          ? 'bg-emerald-100 text-emerald-800' 
+                          : parseFloat(campaign.failureRate) <= 30 
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-red-100 text-red-800'
+                      }`}>
+                        {campaign.failureRate}%
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right font-medium">
+                    {campaign.tokensUsed.toLocaleString()}
                   </TableCell>
                 </TableRow>
               ))}

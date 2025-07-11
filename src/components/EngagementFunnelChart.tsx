@@ -9,34 +9,47 @@ interface EngagementFunnelChartProps {
 const EngagementFunnelChart = ({ data }: EngagementFunnelChartProps) => {
   const totals = data.reduce(
     (acc, item) => ({
+      attempted: acc.attempted + item.attempted,
       delivered: acc.delivered + item.delivered,
       read: acc.read + item.read,
-      responded: acc.responded + item.responded
+      responded: acc.responded + item.responded,
+      failed: acc.failed + (item.attempted - item.delivered)
     }),
-    { delivered: 0, read: 0, responded: 0 }
+    { attempted: 0, delivered: 0, read: 0, responded: 0, failed: 0 }
   );
+
+  const maxValue = Math.max(totals.attempted, totals.delivered, totals.read, totals.responded, totals.failed);
 
   const stages = [
     {
-      label: 'Messages Delivered',
-      count: totals.delivered,
-      percentage: 100,
-      color: 'from-blue-500 to-blue-600',
-      bgColor: 'bg-blue-100'
+      label: 'Total Recipients',
+      count: totals.attempted,
+      color: 'from-slate-500 to-slate-600',
+      bgColor: 'bg-slate-100'
     },
     {
-      label: 'Messages Read',
-      count: totals.read,
-      percentage: (totals.read / totals.delivered) * 100,
+      label: 'Messages Delivered',
+      count: totals.delivered,
       color: 'from-emerald-500 to-emerald-600',
       bgColor: 'bg-emerald-100'
     },
     {
+      label: 'Messages Read',
+      count: totals.read,
+      color: 'from-blue-500 to-blue-600',
+      bgColor: 'bg-blue-100'
+    },
+    {
       label: 'Messages Responded',
       count: totals.responded,
-      percentage: (totals.responded / totals.delivered) * 100,
       color: 'from-purple-500 to-purple-600',
       bgColor: 'bg-purple-100'
+    },
+    {
+      label: 'Messages Failed',
+      count: totals.failed,
+      color: 'from-red-500 to-red-600',
+      bgColor: 'bg-red-100'
     }
   ];
 
@@ -57,9 +70,6 @@ const EngagementFunnelChart = ({ data }: EngagementFunnelChartProps) => {
                   <div className="font-bold text-gray-900">
                     {stage.count.toLocaleString()}
                   </div>
-                  <div className="text-sm text-gray-500">
-                    {stage.percentage.toFixed(1)}%
-                  </div>
                 </div>
               </div>
               
@@ -67,10 +77,10 @@ const EngagementFunnelChart = ({ data }: EngagementFunnelChartProps) => {
                    style={{ height: '60px' }}>
                 <div 
                   className={`h-full bg-gradient-to-r ${stage.color} transition-all duration-1000 ease-out flex items-center justify-center`}
-                  style={{ width: `${Math.max(stage.percentage, 5)}%` }}
+                  style={{ width: `${Math.max((stage.count / maxValue) * 100, 5)}%` }}
                 >
                   <span className="text-white font-semibold text-sm">
-                    {stage.percentage.toFixed(1)}%
+                    {stage.count.toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -82,29 +92,6 @@ const EngagementFunnelChart = ({ data }: EngagementFunnelChartProps) => {
               )}
             </div>
           ))}
-        </div>
-        
-        <div className="mt-6 p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg">
-          <div className="text-sm text-gray-600">
-            <div className="flex justify-between">
-              <span>Delivered → Read conversion:</span>
-              <span className="font-semibold">
-                {((totals.read / totals.delivered) * 100).toFixed(1)}%
-              </span>
-            </div>
-            <div className="flex justify-between mt-1">
-              <span>Read → Response conversion:</span>
-              <span className="font-semibold">
-                {((totals.responded / totals.read) * 100).toFixed(1)}%
-              </span>
-            </div>
-            <div className="flex justify-between mt-1">
-              <span>Overall engagement rate:</span>
-              <span className="font-semibold text-purple-600">
-                {((totals.responded / totals.delivered) * 100).toFixed(1)}%
-              </span>
-            </div>
-          </div>
         </div>
       </CardContent>
     </Card>

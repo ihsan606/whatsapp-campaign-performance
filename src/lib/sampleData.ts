@@ -1,6 +1,7 @@
 
 export interface CampaignData {
   campaignId: string;
+  campaignType: 'Automation' | 'Campaign';
   timestamp: string;
   attempted: number;
   delivered: number;
@@ -8,10 +9,12 @@ export interface CampaignData {
   failureReason?: string;
   read: number;
   responded: number;
+  tokensUsed: number;
 }
 
 export const generateSampleData = (): CampaignData[] => {
   const campaigns = ['CAMP-001', 'CAMP-002', 'CAMP-003', 'CAMP-004', 'CAMP-005'];
+  const campaignTypes: ('Automation' | 'Campaign')[] = ['Automation', 'Campaign'];
   const failureReasons = [
     'Invalid number',
     'Blocked by user',
@@ -43,6 +46,9 @@ export const generateSampleData = (): CampaignData[] => {
         const responseRate = 0.05 + Math.random() * 0.15; // 5-20% response rate
         const responded = Math.floor(delivered * responseRate);
 
+        // Calculate tokens used (average 1-3 tokens per message)
+        const tokensUsed = Math.floor(attempted * (1 + Math.random() * 2));
+
         // Create timestamp with random hour
         const timestamp = new Date(date);
         timestamp.setHours(Math.floor(Math.random() * 24));
@@ -50,13 +56,15 @@ export const generateSampleData = (): CampaignData[] => {
 
         data.push({
           campaignId,
+          campaignType: campaignTypes[Math.floor(Math.random() * campaignTypes.length)],
           timestamp: timestamp.toISOString(),
           attempted,
           delivered,
           deliveryStatus: delivered === attempted ? 'success' : 'failure',
           failureReason: failed > 0 ? failureReasons[Math.floor(Math.random() * failureReasons.length)] : undefined,
           read,
-          responded
+          responded,
+          tokensUsed
         });
       }
     });

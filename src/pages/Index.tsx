@@ -17,6 +17,7 @@ import { generateSampleData } from '@/lib/sampleData';
 
 const Index = () => {
   const [selectedCampaign, setSelectedCampaign] = useState<string>('all');
+  const [selectedCampaignType, setSelectedCampaignType] = useState<string>('all');
   const [dateRange, setDateRange] = useState<{
     from: Date | undefined;
     to: Date | undefined;
@@ -28,16 +29,17 @@ const Index = () => {
   // Generate sample data
   const rawData = useMemo(() => generateSampleData(), []);
   
-  // Filter data based on selected campaign and date range
+  // Filter data based on selected campaign, campaign type and date range
   const filteredData = useMemo(() => {
     return rawData.filter(item => {
       const itemDate = new Date(item.timestamp);
       const matchesCampaign = selectedCampaign === 'all' || item.campaignId === selectedCampaign;
+      const matchesCampaignType = selectedCampaignType === 'all' || item.campaignType === selectedCampaignType;
       const matchesDateRange = (!dateRange.from || itemDate >= dateRange.from) && 
                               (!dateRange.to || itemDate <= dateRange.to);
-      return matchesCampaign && matchesDateRange;
+      return matchesCampaign && matchesCampaignType && matchesDateRange;
     });
-  }, [rawData, selectedCampaign, dateRange]);
+  }, [rawData, selectedCampaign, selectedCampaignType, dateRange]);
 
   // Get unique campaign IDs for dropdown
   const campaigns = useMemo(() => {
@@ -79,6 +81,20 @@ const Index = () => {
             </div>
 
             <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Campaign Type</label>
+              <Select value={selectedCampaignType} onValueChange={setSelectedCampaignType}>
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="Select campaign type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="Automation">Automation</SelectItem>
+                  <SelectItem value="Campaign">Campaign</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Date Range</label>
               <Popover>
                 <PopoverTrigger asChild>
@@ -110,7 +126,11 @@ const Index = () => {
                     mode="range"
                     defaultMonth={dateRange.from}
                     selected={dateRange}
-                    onSelect={(range) => setDateRange(range || { from: undefined, to: undefined })}
+                    onSelect={(range) => {
+                      if (range?.from && range?.to) {
+                        setDateRange({ from: range.from, to: range.to });
+                      }
+                    }}
                     numberOfMonths={2}
                     className="pointer-events-auto"
                   />
