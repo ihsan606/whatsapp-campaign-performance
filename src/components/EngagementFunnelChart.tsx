@@ -69,7 +69,10 @@ const EngagementFunnelChart = ({ data }: EngagementFunnelChartProps) => {
                 {index > 0 && (
                   <div className="text-right">
                     <div className="text-sm text-gray-500">
-                      {((stage.count / stages[index - 1].count) * 100).toFixed(1)}% conversion
+                      {index === 4 
+                        ? ((stage.count / stages[0].count) * 100).toFixed(1)
+                        : ((stage.count / stages[index - 1].count) * 100).toFixed(1)
+                      }% conversion
                     </div>
                   </div>
                 )}
