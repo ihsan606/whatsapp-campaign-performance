@@ -64,6 +64,20 @@ const Index = () => {
         <Card className="p-6 bg-white/70 backdrop-blur-sm border-0 shadow-lg">
           <div className="flex flex-wrap gap-4 items-center">
             <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Campaign Type</label>
+              <Select value={selectedCampaignType} onValueChange={setSelectedCampaignType}>
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="Select campaign type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="Automation">Automation</SelectItem>
+                  <SelectItem value="Campaign">Campaign</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Campaign</label>
               <Select value={selectedCampaign} onValueChange={setSelectedCampaign}>
                 <SelectTrigger className="w-48">
@@ -76,20 +90,6 @@ const Index = () => {
                       {campaign}
                     </SelectItem>
                   ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Campaign Type</label>
-              <Select value={selectedCampaignType} onValueChange={setSelectedCampaignType}>
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Select campaign type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="Automation">Automation</SelectItem>
-                  <SelectItem value="Campaign">Campaign</SelectItem>
                 </SelectContent>
               </Select>
             </div>

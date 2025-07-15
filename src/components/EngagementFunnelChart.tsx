@@ -66,16 +66,13 @@ const EngagementFunnelChart = ({ data }: EngagementFunnelChartProps) => {
             <div key={index} className="relative">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium text-gray-700">{stage.label}</span>
-                <div className="text-right">
-                  <div className="font-bold text-gray-900">
-                    {stage.count.toLocaleString()}
-                  </div>
-                  {index > 0 && (
+                {index > 0 && (
+                  <div className="text-right">
                     <div className="text-sm text-gray-500">
                       {((stage.count / stages[index - 1].count) * 100).toFixed(1)}% conversion
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
               
               <div className={`relative ${stage.bgColor} rounded-lg overflow-hidden`} 
