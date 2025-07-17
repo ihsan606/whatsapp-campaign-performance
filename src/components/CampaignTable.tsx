@@ -44,7 +44,7 @@ const CampaignTable = ({ data }: CampaignTableProps) => {
     const readRate = (campaign.totalRead / campaign.totalDelivered) * 100;
     const responseRate = (campaign.totalResponded / campaign.totalDelivered) * 100;
     const failureRate = (campaign.totalFailed / campaign.totalAttempted) * 100;
-    const totalCost = campaign.totalTokensUsed * 0.001; // Assuming $0.001 per token for WhatsApp
+    const totalCost = campaign.totalTokensUsed * 15; // Assuming IDR 15 per token for WhatsApp
 
     return {
       campaignId: campaign.campaignId,
@@ -85,6 +85,7 @@ const CampaignTable = ({ data }: CampaignTableProps) => {
                 <TableHead className="font-semibold text-right">Read Rate</TableHead>
                 <TableHead className="font-semibold text-right">Response Rate</TableHead>
                 <TableHead className="font-semibold text-right">Failure Rate</TableHead>
+                <TableHead className="font-semibold text-right">Token Used</TableHead>
                 <TableHead className="font-semibold text-right">Total Cost</TableHead>
               </TableRow>
             </TableHeader>
@@ -150,7 +151,10 @@ const CampaignTable = ({ data }: CampaignTableProps) => {
                     </span>
                   </TableCell>
                   <TableCell className="text-right font-medium">
-                    ${campaign.totalCost.toFixed(3)}
+                    {campaign.tokensUsed.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-right font-medium">
+                    IDR {campaign.totalCost.toLocaleString()}
                   </TableCell>
                 </TableRow>
               ))}
