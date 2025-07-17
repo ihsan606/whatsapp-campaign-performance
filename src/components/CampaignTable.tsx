@@ -44,20 +44,22 @@ const CampaignTable = ({ data }: CampaignTableProps) => {
     const readRate = (campaign.totalRead / campaign.totalDelivered) * 100;
     const responseRate = (campaign.totalResponded / campaign.totalDelivered) * 100;
     const failureRate = (campaign.totalFailed / campaign.totalAttempted) * 100;
+    const totalCost = campaign.totalTokensUsed * 0.001; // Assuming $0.001 per token for WhatsApp
 
     return {
       campaignId: campaign.campaignId,
       publishDate: format(parseISO(campaign.publishDate), 'MMM dd, yyyy'),
       totalRecipients: campaign.totalAttempted,
+      sent: campaign.totalAttempted,
       delivered: campaign.totalDelivered,
-      deliveryRate: deliveryRate.toFixed(1),
       read: campaign.totalRead,
+      replied: campaign.totalResponded,
+      deliveryRate: deliveryRate.toFixed(1),
       readRate: readRate.toFixed(1),
-      responded: campaign.totalResponded,
       responseRate: responseRate.toFixed(1),
-      failed: campaign.totalFailed,
       failureRate: failureRate.toFixed(1),
-      tokensUsed: campaign.totalTokensUsed
+      tokensUsed: campaign.totalTokensUsed,
+      totalCost: totalCost
     };
   });
 
@@ -75,12 +77,15 @@ const CampaignTable = ({ data }: CampaignTableProps) => {
               <TableRow>
                 <TableHead className="font-semibold">Campaign Name</TableHead>
                 <TableHead className="font-semibold">Publish Date</TableHead>
-                <TableHead className="font-semibold text-right">Total Recipients</TableHead>
+                <TableHead className="font-semibold text-right">Sent</TableHead>
+                <TableHead className="font-semibold text-right">Delivered</TableHead>
+                <TableHead className="font-semibold text-right">Read</TableHead>
+                <TableHead className="font-semibold text-right">Replied</TableHead>
                 <TableHead className="font-semibold text-right">Delivery Rate</TableHead>
                 <TableHead className="font-semibold text-right">Read Rate</TableHead>
                 <TableHead className="font-semibold text-right">Response Rate</TableHead>
                 <TableHead className="font-semibold text-right">Failure Rate</TableHead>
-                <TableHead className="font-semibold text-right">Tokens Used</TableHead>
+                <TableHead className="font-semibold text-right">Total Cost</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -89,7 +94,16 @@ const CampaignTable = ({ data }: CampaignTableProps) => {
                   <TableCell className="font-medium">{campaign.campaignId}</TableCell>
                   <TableCell className="text-gray-600">{campaign.publishDate}</TableCell>
                   <TableCell className="text-right font-medium">
-                    {campaign.totalRecipients.toLocaleString()}
+                    {campaign.sent.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-right font-medium">
+                    {campaign.delivered.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-right font-medium">
+                    {campaign.read.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-right font-medium">
+                    {campaign.replied.toLocaleString()}
                   </TableCell>
                   <TableCell className="text-right">
                     <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
@@ -136,7 +150,7 @@ const CampaignTable = ({ data }: CampaignTableProps) => {
                     </span>
                   </TableCell>
                   <TableCell className="text-right font-medium">
-                    {campaign.tokensUsed.toLocaleString()}
+                    ${campaign.totalCost.toFixed(3)}
                   </TableCell>
                 </TableRow>
               ))}
